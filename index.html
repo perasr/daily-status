@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Status Report</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 2rem;
+            min-height: 100vh;
+            color: #1a1a1a;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e8ecef;
+        }
+
+        .project-name h2 {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin: 0;
+            background: linear-gradient(135deg, #ff9966, #ff5e62);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .team-member-role {
+            font-size: 0.85rem;
+            color: #475569;
+            display: block;
+            margin-top: 0.2rem;
+            font-weight: 500;
+        }
+
+        .date-navigation {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background-color: #f8f9fa;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+        }
+
+        .nav-button {
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, #04bade, #0396b8);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(4, 186, 222, 0.3);
+            background: linear-gradient(135deg, #04bade, #027d99);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 1rem;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+            vertical-align: top;
+        }
+
+        th:first-child, td:first-child {
+            width: 25%;
+        }
+
+        th:last-child, td:last-child {
+            width: 75%;
+        }
+
+        th {
+            background: linear-gradient(135deg, #ff9966, #ff5e62);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            padding: 0.6rem 1rem;
+        }
+
+        td {
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+            color: #1e293b;
+            font-weight: 500;
+        }
+
+        .member-chip {
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+            color: #1e293b;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            font-weight: 600;
+            letter-spacing: 0.2px;
+        }
+
+        .member-chip .role {
+            font-size: 0.8rem;
+            color: #475569;
+            font-weight: 500;
+            letter-spacing: 0.1px;
+        }
+
+        .member-chip:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(135deg, #ffd1c1, #ffc5c5);
+        }
+
+        .member-chip.active {
+            background: linear-gradient(135deg, #ff9966, #ff5e62);
+            color: white;
+            box-shadow: 0 4px 12px rgba(255, 94, 98, 0.3);
+        }
+
+        .member-chip.all {
+            background: linear-gradient(135deg, #ff9966, #ff5e62);
+            color: white;
+            box-shadow: 0 4px 12px rgba(255, 94, 98, 0.3);
+        }
+
+        .member-chip.all:hover {
+            background: linear-gradient(135deg, #ff8b66, #ff4d62);
+            box-shadow: 0 4px 12px rgba(255, 94, 98, 0.4);
+        }
+
+        textarea {
+            width: 100%;
+            padding: 0.6rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            min-height: 70px;
+            font-family: inherit;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+            background-color: #fff;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #1e293b;
+            font-weight: 400;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .save-button {
+            margin-top: 1.5rem;
+            padding: 0.75rem 2rem;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            float: right;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        .save-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2);
+        }
+
+        input[type="date"] {
+            padding: 0.5rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: inherit;
+            color: #2c3e50;
+        }
+
+        input[type="date"]:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .team-members {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin: 2rem 0;
+        }
+
+        .tasks-container {
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .tasks-container.visible {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .member-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e8ecef;
+        }
+
+        .member-header h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #1e293b;
+            letter-spacing: -0.3px;
+            margin: 0;
+        }
+
+        .member-header .role {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #475569;
+            letter-spacing: 0.1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="project-name">
+                <h2>Campus.Life</h2>
+            </div>
+            <div class="date-navigation">
+                <button class="nav-button" onclick="changeDate(-1)">Previous Day</button>
+                <div class="date">
+                    <label for="date">Date:</label>
+                    <input type="date" id="date" onchange="loadDailyStatus()">
+                </div>
+                <button class="nav-button" onclick="changeDate(1)">Next Day</button>
+            </div>
+        </div>
+
+        <div class="team-members">
+            <button class="member-chip all active" onclick="showMember('all')">
+                All Members
+            </button>
+            <button class="member-chip" onclick="showMember('Rohith')">
+                Rohith
+            </button>
+            <button class="member-chip" onclick="showMember('Sai Ganesh')">
+                Sai Ganesh
+            </button>
+            <button class="member-chip" onclick="showMember('Bhargava')">
+                Bhargava
+            </button>
+            <button class="member-chip" onclick="showMember('Dileep')">
+                Dileep
+            </button>
+            <button class="member-chip" onclick="showMember('Vinay')">
+                Vinay
+            </button>
+            <button class="member-chip" onclick="showMember('Sriganesh')">
+                Sriganesh
+            </button>
+        </div>
+
+        <div id="allTasks" class="tasks-container visible">
+            <table id="statusTable">
+                <thead>
+                    <tr>
+                        <th>Team Member</th>
+                        <th>Completed Tasks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            Rohith <br>
+                            <span class="team-member-role">Android Dev</span>
+                        </td>
+                        <td><textarea placeholder="Enter completed tasks"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Sai Ganesh <br>
+                            <span class="team-member-role">Android Dev</span>
+                        </td>
+                        <td><textarea placeholder="Enter completed tasks"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Bhargava <br>
+                            <span class="team-member-role">Web Dev</span>
+                        </td>
+                        <td><textarea placeholder="Enter completed tasks"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Dileep <br>
+                            <span class="team-member-role">iOS Dev</span>
+                        </td>
+                        <td><textarea placeholder="Enter completed tasks"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Vinay <br>
+                            <span class="team-member-role">iOS Dev</span>
+                        </td>
+                        <td><textarea placeholder="Enter completed tasks"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Sriganesh <br>
+                            <span class="team-member-role">PM</span>
+                        </td>
+                        <td><textarea placeholder="Enter completed tasks"></textarea></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="individualTask" class="tasks-container">
+            <div class="member-header">
+                <h3 id="selectedMemberName">Member Name</h3>
+                <span id="selectedMemberRole" class="role">Role</span>
+            </div>
+            <textarea id="individualTaskInput" placeholder="Enter completed tasks" style="width: 100%; min-height: 200px;"></textarea>
+        </div>
+
+        <button class="save-button" onclick="saveDailyStatus()">Save Status</button>
+    </div>
+
+    <script>
+        // Set today's date by default and load any existing data
+        document.getElementById('date').valueAsDate = new Date();
+        loadDailyStatus();
+
+        function showMember(member) {
+            // Update active state of chips
+            document.querySelectorAll('.member-chip').forEach(chip => {
+                chip.classList.remove('active');
+                if ((member === 'all' && chip.classList.contains('all')) || 
+                    chip.innerText.includes(member)) {
+                    chip.classList.add('active');
+                }
+            });
+
+            // Show/hide appropriate container
+            const allTasks = document.getElementById('allTasks');
+            const individualTask = document.getElementById('individualTask');
+            
+            if (member === 'all') {
+                allTasks.classList.add('visible');
+                individualTask.classList.remove('visible');
+            } else {
+                allTasks.classList.remove('visible');
+                individualTask.classList.add('visible');
+                
+                // Update individual task view
+                const memberRole = {
+                    'Rohith': 'Android Dev',
+                    'Sai Ganesh': 'Android Dev',
+                    'Bhargava': 'Web Dev',
+                    'Dileep': 'iOS Dev',
+                    'Vinay': 'iOS Dev',
+                    'Sriganesh': 'PM'
+                };
+                
+                document.getElementById('selectedMemberName').textContent = member;
+                document.getElementById('selectedMemberRole').textContent = memberRole[member];
+                
+                // Load existing data for this member
+                const date = document.getElementById('date').value;
+                const savedData = localStorage.getItem(`status_${date}`);
+                if (savedData) {
+                    const statusData = JSON.parse(savedData);
+                    document.getElementById('individualTaskInput').value = statusData[member] || '';
+                } else {
+                    document.getElementById('individualTaskInput').value = '';
+                }
+            }
+        }
+
+        function changeDate(days) {
+            const dateInput = document.getElementById('date');
+            const currentDate = new Date(dateInput.value);
+            currentDate.setDate(currentDate.getDate() + days);
+            dateInput.valueAsDate = currentDate;
+            loadDailyStatus();
+        }
+
+        function saveDailyStatus() {
+            const date = document.getElementById('date').value;
+            const statusData = {};
+            
+            // Get all rows and their data
+            if (document.getElementById('allTasks').classList.contains('visible')) {
+                const rows = document.querySelectorAll('#statusTable tbody tr');
+                rows.forEach(row => {
+                    const name = row.querySelector('td:first-child').innerText.split('\n')[0].trim();
+                    const tasks = row.querySelector('textarea').value;
+                    statusData[name] = tasks;
+                });
+            } else {
+                // Save individual task
+                const memberName = document.getElementById('selectedMemberName').textContent;
+                const tasks = document.getElementById('individualTaskInput').value;
+                
+                // Get existing data first
+                const existingData = localStorage.getItem(`status_${date}`);
+                if (existingData) {
+                    Object.assign(statusData, JSON.parse(existingData));
+                }
+                statusData[memberName] = tasks;
+            }
+
+            // Save to localStorage
+            localStorage.setItem(`status_${date}`, JSON.stringify(statusData));
+            alert('Status saved successfully!');
+        }
+
+        function loadDailyStatus() {
+            const date = document.getElementById('date').value;
+            const savedData = localStorage.getItem(`status_${date}`);
+            
+            if (savedData) {
+                const statusData = JSON.parse(savedData);
+                
+                // Update all textareas with saved data
+                const rows = document.querySelectorAll('#statusTable tbody tr');
+                rows.forEach(row => {
+                    const name = row.querySelector('td:first-child').innerText.split('\n')[0].trim();
+                    const textarea = row.querySelector('textarea');
+                    textarea.value = statusData[name] || '';
+                });
+
+                // Update individual view if it's active
+                if (document.getElementById('individualTask').classList.contains('visible')) {
+                    const memberName = document.getElementById('selectedMemberName').textContent;
+                    document.getElementById('individualTaskInput').value = statusData[memberName] || '';
+                }
+            } else {
+                // Clear all textareas if no data exists for this date
+                const textareas = document.querySelectorAll('textarea');
+                textareas.forEach(textarea => {
+                    textarea.value = '';
+                });
+            }
+        }
+    </script>
+</body>
+</html>
