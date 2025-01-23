@@ -173,59 +173,72 @@
             box-shadow: 0 4px 12px rgba(255, 94, 98, 0.4);
         }
 
+        .member-photo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 10px;
+            display: block;
+        }
+
+        .member-name {
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .member-role {
+            text-align: center;
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+        }
+
+        .disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .last-updated {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
         textarea {
             width: 100%;
-            padding: 0.6rem;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            min-height: 70px;
-            font-family: inherit;
+            min-height: 150px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
             resize: vertical;
-            transition: border-color 0.3s ease;
-            background-color: #fff;
-            font-size: 0.95rem;
+            transition: border-color 0.3s;
+            font-size: 16px;
             line-height: 1.5;
-            color: #1e293b;
-            font-weight: 400;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        textarea::placeholder {
+            font-size: 16px;
+            color: #888;
+        }
+
+        textarea:not([disabled]):hover {
+            border-color: #04bade;
+            cursor: pointer;
         }
 
         textarea:focus {
             outline: none;
-            border-color: #3498db;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+            border-color: #04bade;
+            box-shadow: 0 0 0 2px rgba(4, 186, 222, 0.1);
         }
 
-        .save-button {
-            margin-top: 1.5rem;
-            padding: 0.75rem 2rem;
-            background: linear-gradient(135deg, #2ecc71, #27ae60);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            float: right;
-            font-weight: 500;
-            font-size: 1rem;
-        }
-
-        .save-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2);
-        }
-
-        input[type="date"] {
-            padding: 0.5rem;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            font-family: inherit;
-            color: #2c3e50;
-        }
-
-        input[type="date"]:focus {
-            outline: none;
-            border-color: #3498db;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        table td {
+            padding: 20px;
+            vertical-align: top;
         }
 
         .team-members {
@@ -273,6 +286,68 @@
             color: #475569;
             letter-spacing: 0.1px;
         }
+
+        .save-button {
+            margin-top: 1.5rem;
+            padding: 0.75rem 2rem;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            float: right;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        .save-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2);
+        }
+
+        input[type="date"] {
+            padding: 0.5rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: inherit;
+            color: #2c3e50;
+        }
+
+        input[type="date"]:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .date {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 20px;
+        }
+
+        .date label {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .date input[type="date"] {
+            padding: 8px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: inherit;
+            color: #2c3e50;
+            background: white;
+        }
+
+        .date input[type="date"]:focus {
+            outline: none;
+            border-color: #04bade;
+            box-shadow: 0 0 0 2px rgba(4, 186, 222, 0.1);
+        }
     </style>
 </head>
 <body>
@@ -284,8 +359,8 @@
             <div class="date-navigation">
                 <button class="nav-button" onclick="changeDate(-1)">Previous Day</button>
                 <div class="date">
-                    <label for="date">Date:</label>
-                    <input type="date" id="date" onchange="loadDailyStatus()">
+                    <label id="dateLabel">Today</label>
+                    <input type="date" id="date" onchange="loadDailyStatus(); updateDateLabel()">
                 </div>
                 <button class="nav-button" onclick="changeDate(1)">Next Day</button>
             </div>
@@ -326,45 +401,69 @@
                 <tbody>
                     <tr>
                         <td>
-                            Rohith <br>
-                            <span class="team-member-role">Android Dev</span>
+                            <img src="images/Rohith.png" class="member-photo" alt="Rohith">
+                            <div class="member-name">Rohith</div>
+                            <div class="member-role">Android Dev</div>
                         </td>
-                        <td><textarea placeholder="Enter completed tasks"></textarea></td>
+                        <td>
+                            <textarea placeholder="Enter completed tasks" onblur="saveStatus(this)"></textarea>
+                            <div class="last-updated"></div>
+                        </td>
                     </tr>
                     <tr>
                         <td>
-                            Sai Ganesh <br>
-                            <span class="team-member-role">Android Dev</span>
+                            <img src="images/Sai Ganesh.png" class="member-photo" alt="Sai Ganesh">
+                            <div class="member-name">Sai Ganesh</div>
+                            <div class="member-role">Android Dev</div>
                         </td>
-                        <td><textarea placeholder="Enter completed tasks"></textarea></td>
+                        <td>
+                            <textarea placeholder="Enter completed tasks" onblur="saveStatus(this)"></textarea>
+                            <div class="last-updated"></div>
+                        </td>
                     </tr>
                     <tr>
                         <td>
-                            Bhargava <br>
-                            <span class="team-member-role">Web Dev</span>
+                            <img src="images/Bhargava.png" class="member-photo" alt="Bhargava">
+                            <div class="member-name">Bhargava</div>
+                            <div class="member-role">Web Dev</div>
                         </td>
-                        <td><textarea placeholder="Enter completed tasks"></textarea></td>
+                        <td>
+                            <textarea placeholder="Enter completed tasks" onblur="saveStatus(this)"></textarea>
+                            <div class="last-updated"></div>
+                        </td>
                     </tr>
                     <tr>
                         <td>
-                            Dileep <br>
-                            <span class="team-member-role">iOS Dev</span>
+                            <img src="images/Dileep.png" class="member-photo" alt="Dileep">
+                            <div class="member-name">Dileep</div>
+                            <div class="member-role">iOS Dev</div>
                         </td>
-                        <td><textarea placeholder="Enter completed tasks"></textarea></td>
+                        <td>
+                            <textarea placeholder="Enter completed tasks" onblur="saveStatus(this)"></textarea>
+                            <div class="last-updated"></div>
+                        </td>
                     </tr>
                     <tr>
                         <td>
-                            Vinay <br>
-                            <span class="team-member-role">iOS Dev</span>
+                            <img src="images/Vinay.png" class="member-photo" alt="Vinay">
+                            <div class="member-name">Vinay</div>
+                            <div class="member-role">iOS Dev</div>
                         </td>
-                        <td><textarea placeholder="Enter completed tasks"></textarea></td>
+                        <td>
+                            <textarea placeholder="Enter completed tasks" onblur="saveStatus(this)"></textarea>
+                            <div class="last-updated"></div>
+                        </td>
                     </tr>
                     <tr>
                         <td>
-                            Sriganesh <br>
-                            <span class="team-member-role">PM</span>
+                            <img src="images/Sriganesh.png" class="member-photo" alt="Sriganesh">
+                            <div class="member-name">Sriganesh</div>
+                            <div class="member-role">Product Manager</div>
                         </td>
-                        <td><textarea placeholder="Enter completed tasks"></textarea></td>
+                        <td>
+                            <textarea placeholder="Enter completed tasks" onblur="saveStatus(this)"></textarea>
+                            <div class="last-updated"></div>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -383,7 +482,8 @@
 
     <script>
         // Set today's date by default and load any existing data
-        document.getElementById('date').valueAsDate = new Date();
+        const today = new Date();
+        document.getElementById('date').valueAsDate = today;
         loadDailyStatus();
 
         function showMember(member) {
@@ -391,44 +491,66 @@
             document.querySelectorAll('.member-chip').forEach(chip => {
                 chip.classList.remove('active');
                 if ((member === 'all' && chip.classList.contains('all')) || 
-                    chip.innerText.includes(member)) {
+                    chip.innerText.trim() === member) {
                     chip.classList.add('active');
                 }
             });
 
-            // Show/hide appropriate container
-            const allTasks = document.getElementById('allTasks');
-            const individualTask = document.getElementById('individualTask');
-            
-            if (member === 'all') {
-                allTasks.classList.add('visible');
-                individualTask.classList.remove('visible');
-            } else {
-                allTasks.classList.remove('visible');
-                individualTask.classList.add('visible');
-                
-                // Update individual task view
-                const memberRole = {
-                    'Rohith': 'Android Dev',
-                    'Sai Ganesh': 'Android Dev',
-                    'Bhargava': 'Web Dev',
-                    'Dileep': 'iOS Dev',
-                    'Vinay': 'iOS Dev',
-                    'Sriganesh': 'PM'
-                };
-                
-                document.getElementById('selectedMemberName').textContent = member;
-                document.getElementById('selectedMemberRole').textContent = memberRole[member];
-                
-                // Load existing data for this member
-                const date = document.getElementById('date').value;
-                const savedData = localStorage.getItem(`status_${date}`);
-                if (savedData) {
-                    const statusData = JSON.parse(savedData);
-                    document.getElementById('individualTaskInput').value = statusData[member] || '';
+            // Show/hide rows based on selection
+            const rows = document.querySelectorAll('#statusTable tbody tr');
+            rows.forEach(row => {
+                const memberName = row.querySelector('.member-name').textContent;
+                if (member === 'all' || memberName === member) {
+                    row.style.display = '';
                 } else {
-                    document.getElementById('individualTaskInput').value = '';
+                    row.style.display = 'none';
                 }
+            });
+        }
+
+        function saveStatus(textarea) {
+            const date = document.getElementById('date').value;
+            const name = textarea.parentElement.previousElementSibling.querySelector('.member-name').textContent;
+            const lastUpdatedDiv = textarea.nextElementSibling;
+            
+            // Save the status
+            const savedData = localStorage.getItem(`status_${date}`) || '{}';
+            const statusData = JSON.parse(savedData);
+            
+            statusData[name] = {
+                tasks: textarea.value,
+                lastUpdated: new Date().toLocaleString()
+            };
+            
+            localStorage.setItem(`status_${date}`, JSON.stringify(statusData));
+            
+            // Update last updated text
+            lastUpdatedDiv.textContent = `Last updated: ${statusData[name].lastUpdated}`;
+        }
+
+        function checkDateAndLock() {
+            const dateInput = document.getElementById('date');
+            const selectedDate = new Date(dateInput.value);
+            const today = new Date();
+            
+            // Reset time portion for comparison
+            selectedDate.setHours(0, 0, 0, 0);
+            today.setHours(0, 0, 0, 0);
+            
+            const textareas = document.querySelectorAll('textarea');
+            
+            if (selectedDate > today) {
+                // Future date - lock everything
+                textareas.forEach(textarea => {
+                    textarea.disabled = true;
+                    textarea.parentElement.classList.add('disabled');
+                });
+            } else {
+                // Today or past date - enable editing
+                textareas.forEach(textarea => {
+                    textarea.disabled = false;
+                    textarea.parentElement.classList.remove('disabled');
+                });
             }
         }
 
@@ -437,37 +559,36 @@
             const currentDate = new Date(dateInput.value);
             currentDate.setDate(currentDate.getDate() + days);
             dateInput.valueAsDate = currentDate;
+            
+            updateDateLabel();
+            checkDateAndLock();
             loadDailyStatus();
         }
 
-        function saveDailyStatus() {
-            const date = document.getElementById('date').value;
-            const statusData = {};
+        function updateDateLabel() {
+            const dateInput = document.getElementById('date');
+            const dateLabel = document.getElementById('dateLabel');
+            const selectedDate = new Date(dateInput.value);
+            const today = new Date();
             
-            // Get all rows and their data
-            if (document.getElementById('allTasks').classList.contains('visible')) {
-                const rows = document.querySelectorAll('#statusTable tbody tr');
-                rows.forEach(row => {
-                    const name = row.querySelector('td:first-child').innerText.split('\n')[0].trim();
-                    const tasks = row.querySelector('textarea').value;
-                    statusData[name] = tasks;
-                });
+            // Reset time portions for comparison
+            selectedDate.setHours(0, 0, 0, 0);
+            today.setHours(0, 0, 0, 0);
+            
+            if (selectedDate.getTime() === today.getTime()) {
+                dateLabel.textContent = 'Today';
+            } else if (selectedDate.getTime() === today.getTime() - 86400000) { // Yesterday (24 * 60 * 60 * 1000)
+                dateLabel.textContent = 'Yesterday';
+            } else if (selectedDate.getTime() === today.getTime() + 86400000) { // Tomorrow
+                dateLabel.textContent = 'Tomorrow';
             } else {
-                // Save individual task
-                const memberName = document.getElementById('selectedMemberName').textContent;
-                const tasks = document.getElementById('individualTaskInput').value;
-                
-                // Get existing data first
-                const existingData = localStorage.getItem(`status_${date}`);
-                if (existingData) {
-                    Object.assign(statusData, JSON.parse(existingData));
-                }
-                statusData[memberName] = tasks;
+                // Format date as "DD Month YYYY"
+                dateLabel.textContent = selectedDate.toLocaleDateString('en-US', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                });
             }
-
-            // Save to localStorage
-            localStorage.setItem(`status_${date}`, JSON.stringify(statusData));
-            alert('Status saved successfully!');
         }
 
         function loadDailyStatus() {
@@ -477,27 +598,38 @@
             if (savedData) {
                 const statusData = JSON.parse(savedData);
                 
-                // Update all textareas with saved data
                 const rows = document.querySelectorAll('#statusTable tbody tr');
                 rows.forEach(row => {
-                    const name = row.querySelector('td:first-child').innerText.split('\n')[0].trim();
+                    const name = row.querySelector('.member-name').textContent;
                     const textarea = row.querySelector('textarea');
-                    textarea.value = statusData[name] || '';
+                    const lastUpdated = row.querySelector('.last-updated');
+                    
+                    if (statusData[name]) {
+                        textarea.value = statusData[name].tasks || '';
+                        lastUpdated.textContent = statusData[name].lastUpdated ? 
+                            `Last updated: ${statusData[name].lastUpdated}` : '';
+                    } else {
+                        textarea.value = '';
+                        lastUpdated.textContent = '';
+                    }
                 });
-
-                // Update individual view if it's active
-                if (document.getElementById('individualTask').classList.contains('visible')) {
-                    const memberName = document.getElementById('selectedMemberName').textContent;
-                    document.getElementById('individualTaskInput').value = statusData[memberName] || '';
-                }
             } else {
                 // Clear all textareas if no data exists for this date
                 const textareas = document.querySelectorAll('textarea');
                 textareas.forEach(textarea => {
                     textarea.value = '';
                 });
+                const lastUpdated = document.querySelectorAll('.last-updated');
+                lastUpdated.forEach(div => {
+                    div.textContent = '';
+                });
             }
+            
+            checkDateAndLock();
         }
+
+        // Initial check for date locking
+        checkDateAndLock();
     </script>
 </body>
 </html>
